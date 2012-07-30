@@ -1075,36 +1075,13 @@ function loadMap() {
 			if (txt.indexOf(',') > 0) {
 				locationString = txt;
 				console.log(locationString);
+				alert(locationString)
 			} else {
-
-				var re1 = '((?:[a-z][a-z]+))';
-				// Word 1
-				var re2 = '(\\s+)';
-				// White Space 1
-				var re3 = '((?:[a-z][a-z]+))';
-				// Word 2
-				var re4 = '(\\s+)';
-				// White Space 2
-				var re5 = '((?:[a-z][a-z]+))';
-				// Word 3
-				var re6 = '(\\s+)';
-				// White Space 3
-				var re7 = '((?:[a-z][a-z]+))';
-				// Word 4
-
-				var p = new RegExp(re1 + re2 + re3 + re4 + re5 + re6 + re7, ["i"]);
-				var m = p.exec(txt);
-				if (m != null) {
-					var word1 = m[1];
-					var ws1 = m[2];
-					var word2 = m[3];
-					var ws2 = m[4];
-					var word3 = m[5];
-					var ws3 = m[6];
-					var word4 = m[7];
-					locationString = word1 + ws1 + word2 + ws2 + word3 + ws3 + word4;
-					console.log(locationString);
-				}
+				var n = txt.split(" ",3);
+				txt = n[0]+" "+n[1]+" "+n[2];
+				locationString = txt;
+				console.log(locationString);
+				alert(locationString);
 			}
 
 			new google.maps.Geocoder().geocode({
