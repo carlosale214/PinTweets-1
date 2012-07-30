@@ -1077,12 +1077,13 @@ function loadMap(){
             new google.maps.Geocoder().geocode( { 'address': locationString }, function(results, status) {
 
                 if (status == google.maps.GeocoderStatus.OK) {
-
+			
                 	console.log('okay');
                 	console.log(locationString);
                 	console.log(results);
                     console.log('\n')
-                    gotCoords(user.screen_name,results[0].geometry.location.lat(),results[0].geometry.location.lng())
+                    if(array &&(locationString != 'Atlanta' || 'Springfield'))
+                    	gotCoords(user.screen_name,results[0].geometry.location.lat(),results[0].geometry.location.lng())
 
                 } else {
 
