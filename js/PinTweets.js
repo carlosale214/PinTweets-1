@@ -1082,9 +1082,10 @@ function loadMap(){
                 	console.log(locationString);
                 	console.log(results);
                     console.log('\n')
-                    if(results.length <=3  && (/Springfield/i.test(locationString) || (/Atlanta/i.test(locationString)))){
+                    
+                    if(results.length <=3  && (/Springfield/i.test(locationString) || (/Atlanta/i.test(locationString))))
                     	gotCoords(user.screen_name,results[0].geometry.location.lat(),results[0].geometry.location.lng())
-		}
+		
                 } else {
 
                 	console.log('not okay');
