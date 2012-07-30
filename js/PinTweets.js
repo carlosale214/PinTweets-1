@@ -433,60 +433,27 @@ function zoom(content,map){
 		/**
 		 * Good old copy-and-pasted 3d trig
 		 */
-	    function haversine(latLngFirst, latLngSecond) {
-	    	
-	    	var lat1 = latLngFirst.lat()    	
-	    	var lon1 = latLngFirst.lng()    	
-	    	var lat2 = latLngSecond.lat()    	
-	    	var lon2 = latLngSecond.lng()    	
-	
-	    	var R = 3958.7558657440545; // miles
-			var dLat = (lat2-lat1).toRad();
-			var dLon = (lon2-lon1).toRad();
-			var lat1 = lat1.toRad();
-			var lat2 = lat2.toRad();
-			
-			var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-			        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-			
-			return R * c;
-			
-	    }    
-	
-	    var bounds = new google.maps.LatLngBounds();
 	    
+	    var bounds = new google.maps.LatLngBounds();
 		var allOutOfBounds = true;
 		var oneOutOfBounds = false;
-	    
+		
+	    bounds.extend(global.pin.getPosition());
 	    for(i=0;i<markers.length;i++){
 	    	
-	    	var radius = $('#radius').val();
-	    	var relaxation = 1;
-	    	
-	    	//be more relaxed about smaller radii
-			if (radius <= 100) {
-				relaxation = 3;
-			} else if (radius <= 500) {
-				relaxation = 2;
-			} else if (radius <= 1000) {
-				relaxation = 1.5;
-			} else {
-				relaxation = 1;
-			}
-	
-	    	if (haversine(global.pin.getPosition(), markers[i].position) < radius * relaxation ){
-				bounds.extend(markers[i].position);
-				allOutOfBounds = false;
-	    	} else {
+	    	if(!withinPin(markers[i].lat, markers[i].lng)){
 	    		oneOutOfBounds = true;
 	    	}
+	    	else{
+	    		allOutOfBounds = false;
+	    	}
+	    	bounds.extend(markers[i].getPosition());
 	    }
 	    
-	   	bounds.extend(global.pin.getPosition());
+	   	
 	    
 	    if (allOutOfBounds) {
-	    	
+
 	    	if (!global.worldwideMessageShown) {
 
 		        $().toastmessage('showToast', {
@@ -496,15 +463,15 @@ function zoom(content,map){
 		             position : 'middle-center',
 		             type     : 'notice'
 		        });
-		        
+
 		        global.worldwideMessageShown = true;
-		           		
+
 	    	}
 
 	        //zoom extents if none within radius
 	    	return zoomExtents(markers);
-	    	
-	    	
+
+
 	    } else if (oneOutOfBounds) {
 	    	
 	    	if (!global.localMessageShown) {
@@ -1006,11 +973,11 @@ function loadMap(){
         function gotCoords(userName,lat,lng) {
         	
         	//filter out 0,0
-			if (lat == 0 && lng == 0) {
+			if (!withinPin(lat, lng) || (lat == 0 && lng == 0)) {
 				console.log('Filtering out 0,0 for ' + userName);
 				didNotGetCoords(userName);
 			}
-        	
+        	else{
 	        $.each(results,function () {
 	        	
 	            if (!this.waiting) {return;}
@@ -1024,6 +991,7 @@ function loadMap(){
 	            }
 	            
 	        });
+	        }
 		
         }
 
@@ -1082,8 +1050,11 @@ function loadMap(){
                 	console.log(locationString);
                 	console.log(results);
                     console.log('\n')
-                    if(results.length <= 3 && !(/Springfield/i.test(locationString) || /Atlanta/i.test(locationString))){
+                    if(results.length <= 3 || (/Springfield/i.test(locationString) || /Atl/i.test(locationString))){
                     gotCoords(user.screen_name,results[0].geometry.location.lat(),results[0].geometry.location.lng())
+			}
+			else{
+				didNotGetCoords(user.screen_name);
 			}
                 } else {
 
@@ -1252,3 +1223,50 @@ function loadMap(){
 	}
 	
 };
+
+function withinPin(lat, lng){
+	if(global.pin){
+		function haversine(latFirst, lngFirst, latSecond, lngSecond) {
+	    	
+	    	var lat1 = latFirst   	
+	    	var lon1 = lngFirst   	
+	    	var lat2 = latSecond    	
+	    	var lon2 = lngSecond	
+	
+	    	var R = 3958.7558657440545; // miles
+			var dLat = (lat2-lat1).toRad();
+			var dLon = (lon2-lon1).toRad();
+			var lat1 = lat1 * Math.PI / 180;
+			var lat2 = lat2 * Math.PI / 180;
+			
+			var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+			        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+			
+			return R * c;
+			
+	    }
+	    var radius = $('#radius').val();
+	    var relaxation = 1;
+	    	
+	   	//be more relaxed about smaller radii
+		if (radius <= 100) {
+			relaxation = 3;
+		} else if (radius <= 500) {
+			relaxation = 2;
+		} else if (radius <= 1000) {
+			relaxation = 1.5;
+		} else {
+			relaxation = 1;
+		}
+	
+	    	if (haversine(global.pin.getPosition().lat(), global.pin.getPosition().lng(), lat, lng) < radius * relaxation ){
+				return true;
+	    	} else {
+	    		return false;
+	    	}
+		
+	} else {
+		return true;
+	}
+}
