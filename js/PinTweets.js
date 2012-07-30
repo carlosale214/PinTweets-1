@@ -1071,12 +1071,12 @@ function loadMap() {
 				return;
 			}
 
-			var txt = 'New York City Son is so cool';
+			var txt = "test string";
 			if (txt.indexOf(',') > 0) {
 				locationString = txt;
 				console.log(locationString);
 				alert(locationString)
-			} else {
+			} else if(txt.indexOf(" ") > 0) {
 				var n = txt.split(" ",3);
 				txt = n[0]+" "+n[1]+" "+n[2];
 				locationString = txt;
