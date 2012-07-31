@@ -1071,18 +1071,29 @@ function loadMap() {
 				return;
 			}
 
-			var txt = "test string";
-			if (txt.indexOf(',') > 0) {
-				locationString = txt;
-				console.log(locationString);
-				alert(locationString)
-			} else if(txt.indexOf(" ") > 0) {
-				var n = txt.split(" ",3);
-				txt = n[0]+" "+n[1]+" "+n[2];
-				locationString = txt;
-				console.log(locationString);
-				alert(locationString);
+			var str = "New York City Son so cool";
+			if(str.match(/\s+/g).length > 2 && !/\,/i.test(str) == true){
+				var s = str.split(" ",3);
+			    var locationString = s[0]+" "+s[1]+" "+s[2];
+			}else{
+				var locationString = str;
 			}
+			/*var chartxt = txt.split('');
+			var count = 0;
+			for(i = 0;i<chartxt.length;i++){
+				if(chartxt[i] == ' ')
+					count++;
+			}
+			if(count >= 3){
+				var s = txt.split(" ",3);
+				var locationString = s[0]+" "+s[1]+" "+s[2];
+				alert(locationString);
+			}else{
+				var locationString = txt;
+				alert(locationString);
+			}*/
+			
+			
 
 			new google.maps.Geocoder().geocode({
 				'address' : locationString
