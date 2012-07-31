@@ -1071,7 +1071,7 @@ function loadMap() {
 				return;
 			}
 
-			var str = "New York is the shiznit";
+			var str = "Berkeley, California";
 			str+=" ";
 			if(str.match(/\s+/g).length > 2 && !/\,/i.test(str) == true){
 				var s = str.split(" ",3);
