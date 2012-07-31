@@ -1071,12 +1071,15 @@ function loadMap() {
 				return;
 			}
 
-			var str = "New York City Son so cool";
+			var str = "New York is the shiznit";
+			str+=" ";
 			if(str.match(/\s+/g).length > 2 && !/\,/i.test(str) == true){
 				var s = str.split(" ",3);
 			    var locationString = s[0]+" "+s[1]+" "+s[2];
+			    console.log(locationString + "---true");
 			}else{
 				var locationString = str;
+				console.log(locationString + "---false");
 			}
 			/*var chartxt = txt.split('');
 			var count = 0;
