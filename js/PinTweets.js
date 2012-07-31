@@ -1071,7 +1071,10 @@ function loadMap() {
 				return;
 			}
 
-			var str = "Berkeley, California";
+			var str = "Batman is the coolest thing ever";
+			/*if(str.indexOf("ing")>0 || str.indexOf("in") > 0){
+				str+=",";
+			}*/
 			str+=" ";
 			if(str.match(/\s+/g).length > 2 && !/\,/i.test(str) == true){
 				var s = str.split(" ",3);
